@@ -27,7 +27,7 @@ export function PhotoGrid({ images, label, initial = 12 }: PhotoGridProps) {
         {visible.map((src, i) => (
           <UnstyledButton
             key={src}
-            className="zoomable"
+            className="zoomable photo-grade"
             onClick={() => setIndex(i)}
             aria-label={`Ampliar foto ${i + 1} de ${images.length}: ${label}`}
           >

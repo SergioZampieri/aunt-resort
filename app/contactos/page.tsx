@@ -1,11 +1,9 @@
-import Image from "next/image";
-import { Anchor, Box, Grid, GridCol, Group, Stack, Text } from "@mantine/core";
-import { IconClock, IconMail, IconMapPin } from "@tabler/icons-react";
+import { Anchor, Box, Divider, Grid, GridCol, Group, Stack, Text } from "@mantine/core";
 import { PageHeader } from "../components/PageHeader";
-import { MapEmbed } from "../components/MapEmbed";
+import { MapButton, MapEmbed } from "../components/MapEmbed";
 import { WhatsAppButton } from "../components/WhatsAppButton";
 import { Reveal } from "../components/Reveal";
-import { Section, SectionHeading } from "../components/Section";
+import { Section } from "../components/Section";
 import { siteInfo } from "../data/site";
 
 export const metadata = {
@@ -13,87 +11,74 @@ export const metadata = {
   description: `Escribinos por WhatsApp o email. ${siteInfo.address}. ${siteInfo.addressZone}.`,
 };
 
-function ContactRow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <Group gap="md" wrap="nowrap" align="flex-start">
-      <Text c="lake.8" style={{ lineHeight: 0, marginTop: 4 }}>
-        {icon}
-      </Text>
-      <Box>{children}</Box>
-    </Group>
-  );
-}
+const facts: { label: string; value: React.ReactNode }[] = [
+  { label: "Dirección", value: siteInfo.address },
+  { label: "Zona", value: "El Paraíso" },
+  { label: "Check-in", value: siteInfo.checkIn.toLowerCase() },
+  { label: "Check-out", value: siteInfo.checkOut.toLowerCase() },
+  { label: "Mascotas", value: siteInfo.petsAllowed ? "Se admiten" : "No se admiten" },
+  {
+    label: "Email",
+    value: (
+      <Anchor href={`mailto:${siteInfo.email}`} c="oat.0" fz={13.5} fw={500} underline="hover">
+        {siteInfo.email}
+      </Anchor>
+    ),
+  },
+];
 
+/** Contact and location in one place: the gate sign, the facts, two buttons, the map on request. */
 export default function ContactosPage() {
   return (
     <>
       <PageHeader
-        title="Contacto y ubicación"
-        eyebrow="Hablemos"
-        image="/images/sections/contactos.jpg"
-        imageAlt="Recepción del complejo Mirador de Animas"
-        subtitle="Respondemos por WhatsApp todos los días. Contanos las fechas y cuántos son."
+        title="Cómo llegar"
+        eyebrow={siteInfo.address.split(",")[0]}
+        image="/images/exteriores/img-03.jpg"
+        imageAlt="Cartel de madera de Mirador de Ánimas en el ingreso al complejo"
+        objectPosition="50% 58%"
+        height={294}
+        compact
       />
 
-      <Section tone="paper">
-        <Grid gap={{ base: 40, md: 72 }}>
+      <Section>
+        <Grid gap={{ base: 0, md: 64 }}>
           <GridCol span={{ base: 12, md: 5 }}>
-            <Stack gap="xl">
-              <SectionHeading align="left" eyebrow="Escribinos" title="Estamos a un mensaje" />
-
-              <WhatsAppButton label={`WhatsApp ${siteInfo.phoneDisplay}`} size="lg" />
-
-              <Stack gap="lg">
-                <ContactRow icon={<IconMail size={21} />}>
-                  <Anchor href={`mailto:${siteInfo.email}`} c="lake.8" fw={500}>
-                    {siteInfo.email}
-                  </Anchor>
-                </ContactRow>
-
-                <ContactRow icon={<IconClock size={21} />}>
-                  <Text fz="sm">Check-in: {siteInfo.checkIn}</Text>
-                  <Text fz="sm">Check-out: {siteInfo.checkOut}</Text>
-                </ContactRow>
+            <Stack gap={0}>
+              <Stack className="surface" gap={14} p={18}>
+                {facts.map((fact) => (
+                  <Group key={fact.label} justify="space-between" align="baseline" gap={14} wrap="nowrap">
+                    <Text fz={13} lh={1.4} c="pine.2" style={{ flex: "none" }}>
+                      {fact.label}
+                    </Text>
+                    <Text fz={13.5} fw={500} lh={1.5} ta="right" c="paper" component="div">
+                      {fact.value}
+                    </Text>
+                  </Group>
+                ))}
               </Stack>
 
-              <Reveal delay={120}>
-                <Box
-                  className="arch"
-                  style={{ position: "relative", height: 280, boxShadow: "var(--mantine-shadow-md)" }}
-                >
-                  <Image
-                    src="/images/contacto/contacto.jpg"
-                    alt="Entrada del complejo Mirador de Animas"
-                    fill
-                    loading="lazy"
-                    style={{ objectFit: "cover" }}
-                    sizes="(max-width: 768px) 100vw, 400px"
-                  />
-                </Box>
-              </Reveal>
+              <Stack gap={9} pt={14}>
+                <WhatsAppButton label={`WhatsApp ${siteInfo.phoneDisplay}`} size="lg" fullWidth />
+                <MapButton fullWidth />
+              </Stack>
+
+              <Text fz={12.5} lh={1.65} c="pine.2" pt={16} px={2} style={{ textWrap: "pretty" }}>
+                {siteInfo.addressZone}. {siteInfo.gpsCoordinates}.
+              </Text>
             </Stack>
           </GridCol>
 
           <GridCol span={{ base: 12, md: 7 }}>
-            <Stack gap="xl">
-              <SectionHeading align="left" eyebrow="Cómo llegar" title="Dónde estamos" />
-
-              <Stack gap="lg">
-                <ContactRow icon={<IconMapPin size={21} />}>
-                  <Text fz="lg" fw={600}>
-                    {siteInfo.address}
-                  </Text>
-                  <Text c="dimmed" lh={1.7}>
-                    {siteInfo.addressZone}
-                  </Text>
-                </ContactRow>
-
-              </Stack>
-
-              <Reveal delay={160}>
-                <MapEmbed height={460} />
-              </Reveal>
-            </Stack>
+            <Divider hiddenFrom="md" my={28} color="var(--hairline-light)" />
+            <Reveal delay={120}>
+              <Box>
+                <Text className="eyebrow" c="pine.3" pb={14}>
+                  En el mapa
+                </Text>
+                <MapEmbed height={420} />
+              </Box>
+            </Reveal>
           </GridCol>
         </Grid>
       </Section>

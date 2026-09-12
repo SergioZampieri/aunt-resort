@@ -20,17 +20,24 @@ export function bookingMessage(options: {
   cabinName?: string;
   from?: Date | string | null;
   to?: Date | string | null;
+  guests?: number | null;
+  /** The guest's name, from the request form. */
+  name?: string;
+  note?: string;
 }): string {
-  const { cabinName, from, to } = options;
+  const { cabinName, from, to, guests, name, note } = options;
   const subject = cabinName ? `la ${cabinName}` : "el complejo";
+  const hello = name?.trim() ? `Hola, soy ${name.trim()}. Quisiera` : "Hola, quisiera";
+  const forGuests = guests ? ` para ${guests} ${guests === 1 ? "persona" : "personas"}` : "";
 
+  let message: string;
   if (from && to) {
-    return `Hola, quisiera consultar disponibilidad en ${subject} del ${formatDate(from)} al ${formatDate(to)}.`;
+    message = `${hello} consultar disponibilidad en ${subject} del ${formatDate(from)} al ${formatDate(to)}${forGuests}.`;
+  } else if (from) {
+    message = `${hello} consultar disponibilidad en ${subject} a partir del ${formatDate(from)}${forGuests}.`;
+  } else {
+    message = `${hello} consultar disponibilidad en ${subject}${forGuests}.`;
   }
 
-  if (from) {
-    return `Hola, quisiera consultar disponibilidad en ${subject} a partir del ${formatDate(from)}.`;
-  }
-
-  return `Hola, quisiera consultar disponibilidad en ${subject}.`;
+  return note?.trim() ? `${message} ${note.trim()}` : message;
 }

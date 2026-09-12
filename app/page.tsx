@@ -1,135 +1,78 @@
-import Image from "next/image";
-import { Box, Container, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { IconArrowUpRight } from "@tabler/icons-react";
+import { Box, Container, Flex, Text, Title } from "@mantine/core";
 import { HeroCarousel } from "./components/HeroCarousel";
-import { WhatsAppButton } from "./components/WhatsAppButton";
+import { MobileHero } from "./components/MobileHero";
+import { CabinFinder } from "./components/CabinFinder";
 import { StatStrip } from "./components/StatStrip";
-import { LinkBox, LinkButton } from "./components/NavLinks";
+import { CuratedMosaic } from "./components/CuratedMosaic";
+import { ServicesBand } from "./components/ServicesList";
+import { PromoCards } from "./components/PromoCards";
+import { ArrivalBand } from "./components/ArrivalBand";
 import { Reveal } from "./components/Reveal";
-import { Section, SectionHeading } from "./components/Section";
-import { heroBanners, homeTeasers } from "./data/site";
+import { heroBanners, parkMosaic } from "./data/site";
+import { cabins } from "./data/cabins";
 
+/**
+ * Finder-first. Phones open on the still hero and the two questions; the
+ * park, services, promotions and directions live in their own tabs. From
+ * `sm` up the page is one long scroll: carousel, finder bar overlapping it,
+ * results, facts, mosaic, services, promotions, how to get there.
+ */
 export default function HomePage() {
   return (
     <>
-      <HeroCarousel banners={heroBanners} />
+      <Box hiddenFrom="sm">
+        <MobileHero />
+      </Box>
+      <Box visibleFrom="sm">
+        <HeroCarousel banners={heroBanners} />
+      </Box>
 
-      {/* ---- Welcome: type left, arched photograph right ---- */}
-      <Section tone="paper">
-        <SimpleGrid
-          cols={{ base: 1, md: 2 }}
-          spacing={{ base: 48, md: 88 }}
-          style={{ alignItems: "center" }}
-        >
-          <Reveal>
-            <Stack gap="lg">
-              <Text className="eyebrow ruled" c="lake.8">
-                El complejo
-              </Text>
-              <Title order={2} style={{ textWrap: "balance" }}>
-                Un lugar para no hacer nada durante unos días.
-              </Title>
-              <Text fz="lg" lh={1.85} c="dimmed">
-                Mirador de Animas está al pie de las sierras de Tandil, a pocos minutos del
-                centro. Cabañas independientes, parque abierto y el silencio que se escucha
-                recién cuando apagás el motor.
-              </Text>
-            </Stack>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <Box
-              className="arch"
-              style={{
-                position: "relative",
-                height: "clamp(380px, 48vw, 560px)",
-                boxShadow: "var(--mantine-shadow-lg)",
-              }}
-            >
-              <Image
-                src="/images/home/teaser-exteriores.jpg"
-                alt="Parque arbolado del complejo con las sierras detrás"
-                fill
-                style={{ objectFit: "cover" }}
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </Box>
-          </Reveal>
-        </SimpleGrid>
-
-        <Box mt={{ base: 64, md: 104 }}>
-          <StatStrip />
-        </Box>
-      </Section>
-
-      {/* ---- Three ways in ---- */}
-      <Section tone="deep">
-        <SectionHeading
-          eyebrow="Recorrido"
-          title="Conocé el complejo"
-          lead="Las cabañas, el parque y lo que está incluido en la estadía."
-        />
-
-        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing={{ base: "lg", md: 28 }} mt={{ base: 40, md: 64 }}>
-          {homeTeasers.map((teaser, index) => (
-            <Reveal key={teaser.title} delay={index * 110}>
-              <LinkBox className="hoverCard" href={teaser.href}>
-                <Box
-                  style={{
-                    position: "relative",
-                    height: "clamp(280px, 34vw, 400px)",
-                    overflow: "hidden",
-                    borderRadius: "var(--mantine-radius-md)",
-                  }}
-                >
-                  <Image
-                    src={teaser.image}
-                    alt={teaser.alt}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </Box>
-                <Group justify="space-between" align="baseline" wrap="nowrap" mt="md">
-                  <Text ff="var(--font-abhaya-libre)" fw={700} fz="var(--h3)" lh={1.2}>
-                    {teaser.title}
-                  </Text>
-                  <Box c="lake.8" style={{ lineHeight: 0 }}>
-                    <IconArrowUpRight size={19} />
-                  </Box>
-                </Group>
-              </LinkBox>
-            </Reveal>
-          ))}
-        </SimpleGrid>
-      </Section>
-
-      {/* ---- Closing invitation ---- */}
-      <Box className="g-pine grain" style={{ position: "relative", overflow: "hidden" }}>
-        <Container
-          size="lg"
-          style={{ position: "relative", zIndex: 1, paddingBlock: "var(--section-py)" }}
-        >
-          <Reveal>
-            <Stack gap="lg" align="center" ta="center" maw={620} mx="auto">
-              <Text className="eyebrow" c="lantern.4">
-                Reservas
-              </Text>
-              <Title order={2} c="white" style={{ textWrap: "balance" }}>
-                Elegí tus fechas y te confirmamos por WhatsApp.
-              </Title>
-              <Text c="oat.3" fz="lg" lh={1.75}>
-                Sin formularios ni esperas. Mirá qué cabañas quedan libres y escribinos.
-              </Text>
-              <Group gap="sm" justify="center" mt="xs">
-                <LinkButton href="/cabanas" size="md" radius="xl" color="lake">
-                  Ver fechas libres
-                </LinkButton>
-                <WhatsAppButton variant="white" label="Escribinos" />
-              </Group>
-            </Stack>
-          </Reveal>
+      <Box className="g-night" style={{ position: "relative" }}>
+        <Container size="lg" mt={{ base: 0, sm: -68 }} pt={{ base: 26, sm: 0 }} style={{ position: "relative" }}>
+          <CabinFinder cabins={cabins} showPromoCard />
         </Container>
+
+        <Box visibleFrom="sm">
+          <Container size="lg" pt={64}>
+            <StatStrip />
+          </Container>
+
+          <Container size="lg" pt={64}>
+            <Text className="eyebrow ruled-light" c="pine.3" style={{ paddingTop: 20 }}>
+              Parque y piscina
+            </Text>
+            <Box pt={22}>
+              <CuratedMosaic tiles={parkMosaic} label="Parque y piscina de Mirador de Animas" />
+            </Box>
+          </Container>
+
+          <Container size="lg" pt={80}>
+            <ServicesBand />
+          </Container>
+
+          <Container size="lg" pt={80}>
+            <Text className="eyebrow ruled-light" c="pine.3" style={{ paddingTop: 20 }}>
+              Beneficios
+            </Text>
+            <Reveal>
+              <Flex align="flex-end" justify="space-between" gap={40} pt={14} pb={26} wrap="wrap">
+                <Title order={2} className="display" fz={46} lh={1.02} style={{ letterSpacing: "-0.035em" }}>
+                  Armamos el presupuesto con vos
+                </Title>
+                <Text fz={15} lh={1.65} c="pine.2" maw={380} ta="right">
+                  Contanos cuántos son y qué fechas mirás, y te pasamos la tarifa que te corresponda.
+                </Text>
+              </Flex>
+            </Reveal>
+            <PromoCards />
+          </Container>
+
+          <Box mt={80}>
+            <ArrivalBand />
+          </Box>
+        </Box>
+
+        <Box hiddenFrom="sm" pb={26} />
       </Box>
     </>
   );

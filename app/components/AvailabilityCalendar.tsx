@@ -3,7 +3,7 @@
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { Calendar } from "@mantine/dates";
-import { Box, Group, Stack, Text, useMatches } from "@mantine/core";
+import { Box, Group, Stack, Text } from "@mantine/core";
 import { isDateBooked, labelForDate } from "../lib/availability";
 
 type AvailabilityCalendarProps = {
@@ -23,28 +23,31 @@ function LegendSwatch({ color, border, children }: { color: string; border?: str
           border: border ? `1px solid ${border}` : undefined,
         }}
       />
-      <Text fz="xs" c="dimmed">
+      <Text fz={11.5} c="pine.2">
         {children}
       </Text>
     </Group>
   );
 }
 
+/** Two months side by side, read-only, on the dark ground. Desktop only. */
 export function AvailabilityCalendar({ cabinId, cabinName }: AvailabilityCalendarProps) {
-  // Two months side by side need ~600px; on a phone that pushes the page
-  // into horizontal scroll, so show one and let the arrows do the rest.
-  const columns = useMatches({ base: 1, sm: 2 });
-
   return (
     <Stack gap="md">
       <Calendar
-        numberOfColumns={columns}
+        numberOfColumns={2}
         minDate={dayjs().startOf("month").format("YYYY-MM-DD")}
         ariaLabels={{
           nextMonth: "Mes siguiente",
           previousMonth: "Mes anterior",
           monthLevelControl: "Cambiar de mes",
           yearLevelControl: "Cambiar de año",
+        }}
+        styles={{
+          calendarHeaderLevel: { color: "var(--paper)", fontWeight: 600 },
+          calendarHeaderControl: { color: "var(--text-2)" },
+          weekday: { color: "var(--text-3)", fontSize: 11 },
+          day: { borderRadius: 8 },
         }}
         getDayProps={(dateString) => {
           const booked = isDateBooked(cabinId, dateString);
@@ -61,24 +64,24 @@ export function AvailabilityCalendar({ cabinId, cabinName }: AvailabilityCalenda
             // Distinguished by lightness and a strike, not by hue alone.
             style: booked
               ? {
-                  backgroundColor: "var(--mantine-color-oat-3)",
-                  color: "var(--mantine-color-oat-8)",
+                  backgroundColor: "rgba(237,230,216,0.14)",
+                  color: "rgba(237,230,216,0.5)",
                   textDecoration: "line-through",
                   cursor: "not-allowed",
                 }
               : {
-                  backgroundColor: "var(--mantine-color-moss-1)",
-                  color: "var(--mantine-color-pine-9)",
-                  fontWeight: 700,
+                  backgroundColor: "var(--surface)",
+                  color: "var(--paper)",
+                  fontWeight: 600,
                 },
           };
         }}
       />
-      <Group gap="xl">
-        <LegendSwatch color="var(--mantine-color-moss-1)" border="var(--mantine-color-moss-3)">
+      <Group gap={20}>
+        <LegendSwatch color="var(--surface)" border="var(--hairline-light)">
           Disponible
         </LegendSwatch>
-        <LegendSwatch color="var(--mantine-color-oat-3)" border="var(--mantine-color-oat-5)">
+        <LegendSwatch color="rgba(237,230,216,0.22)" border="rgba(237,230,216,0.3)">
           No disponible
         </LegendSwatch>
       </Group>

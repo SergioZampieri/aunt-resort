@@ -22,34 +22,14 @@ export const siteInfo = {
 
 export type HeroBanner = { src: string; alt: string };
 
+/** Five frames for the desktop carousel. banner-02 is left out on purpose:
+ *  an interior shot that does not carry the sierra-view promise. */
 export const heroBanners: HeroBanner[] = [
   { src: "/images/hero/banner-01.jpg", alt: "Cabañas de Mirador de Animas rodeadas de parque al pie de las sierras de Tandil" },
-  { src: "/images/hero/banner-02.jpg", alt: "Vista del complejo con las sierras de Tandil de fondo" },
   { src: "/images/hero/banner-03.jpg", alt: "Piscina del complejo con cerco perimetral y reposeras" },
   { src: "/images/hero/banner-04.jpg", alt: "Galería de una cabaña con parrilla individual y mesa exterior" },
   { src: "/images/hero/banner-05.jpg", alt: "Amplio parque arbolado del complejo al atardecer" },
   { src: "/images/hero/banner-06.jpg", alt: "Frente de las cabañas en piedra y madera con luces cálidas" },
-];
-
-export const homeTeasers = [
-  {
-    title: "Las cabañas",
-    image: "/images/home/teaser-cabanas-1-2.jpg",
-    href: "/cabanas",
-    alt: "Interior de una cabaña con living y escalera a la planta alta",
-  },
-  {
-    title: "Parque y piscina",
-    image: "/images/home/teaser-piscina.jpeg",
-    href: "/exteriores-piscina",
-    alt: "Piscina con cerco perimetral rodeada de césped",
-  },
-  {
-    title: "Servicios",
-    image: "/images/home/teaser-promociones.jpg",
-    href: "/servicios",
-    alt: "Galería exterior de una cabaña preparada para el desayuno",
-  },
 ];
 
 export const services = [
@@ -90,12 +70,28 @@ export const amenityHighlights = [
   },
 ] as const;
 
+/**
+ * Piscina02 and five numbered shots lead the set — a curated water → play →
+ * shade sequence — followed by the rest of the contact sheet in order.
+ */
+const curatedFirst = [9, 23, 13, 15, 31];
+
 export const exteriorImages = [
-  ...Array.from(
-    { length: 34 },
-    (_, i) => `/images/exteriores/img-${String(i + 1).padStart(2, "0")}.jpg`,
-  ),
   "/images/exteriores/piscina02.jpeg",
+  ...curatedFirst.map((n) => `/images/exteriores/img-${String(n).padStart(2, "0")}.jpg`),
+  ...Array.from({ length: 34 }, (_, i) => i + 1)
+    .filter((n) => !curatedFirst.includes(n))
+    .map((n) => `/images/exteriores/img-${String(n).padStart(2, "0")}.jpg`),
+];
+
+/** The six-tile park sequence: water → play → shade. Order matters. */
+export const parkMosaic = [
+  { src: "/images/exteriores/piscina02.jpeg", alt: "Piscina con reposeras de madera bajo el cielo de la tarde" },
+  { src: "/images/exteriores/img-09.jpg", alt: "La piscina vista desde arriba, rodeada de césped" },
+  { src: "/images/exteriores/img-23.jpg", alt: "El sol entrando entre los árboles del parque" },
+  { src: "/images/exteriores/img-13.jpg", alt: "Juegos para niños en el parque" },
+  { src: "/images/exteriores/img-15.jpg", alt: "La casita de juegos de los chicos" },
+  { src: "/images/exteriores/img-31.jpg", alt: "Deck de madera y hamaca bajo los árboles grandes" },
 ];
 
 export const promotions = [

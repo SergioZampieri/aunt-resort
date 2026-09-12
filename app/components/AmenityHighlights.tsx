@@ -3,18 +3,18 @@ import { amenityHighlights } from "../data/site";
 import { AmenityIcon } from "./AmenityIcon";
 import { Reveal } from "./Reveal";
 
-export function AmenityHighlights({ inverted }: { inverted?: boolean }) {
+export function AmenityHighlights() {
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing={{ base: "xl", md: 40 }}>
       {amenityHighlights.map((item, index) => (
         <Reveal key={item.title} delay={index * 100}>
           <Stack gap="md" align="flex-start">
-            <AmenityIcon name={item.icon} inverted={inverted} />
+            <AmenityIcon name={item.icon} />
             <Box>
-              <Text ff="var(--font-abhaya-libre)" fw={700} fz="var(--h3)" c={inverted ? "white" : undefined}>
+              <Text className="display" fz="var(--h3)" lh={1.2} style={{ letterSpacing: "-0.02em" }}>
                 {item.title}
               </Text>
-              <Text fz="sm" lh={1.7} mt={6} c={inverted ? "oat.2" : "dimmed"}>
+              <Text fz="sm" lh={1.7} mt={6} c="pine.2">
                 {item.description}
               </Text>
             </Box>

@@ -17,8 +17,9 @@ export default function CabanasPage() {
         image="/images/sections/cabana-01.jpg"
         imageAlt="Frente de una de las cabañas del complejo"
         subtitle="Todas independientes, para 5 a 8 personas. Elegí tus fechas y mirá cuáles quedan libres."
+        height={384}
       />
-      <Section tone="paper">
+      <Section>
         <CabinFinder cabins={cabins} />
       </Section>
     </>

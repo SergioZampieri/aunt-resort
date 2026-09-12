@@ -12,22 +12,16 @@ const facts = [
  * Quiet figures on a hairline grid — the facts a visitor scans for, without
  * shouting them.
  */
-export function StatStrip({ inverted }: { inverted?: boolean }) {
+export function StatStrip() {
   return (
     <Box className="factGrid">
       {facts.map((fact, index) => (
         <Reveal key={fact.label} delay={index * 80}>
-          <Box className="factCell" data-inverted={inverted || undefined}>
-            <Box className="factNumber" c={inverted ? "white" : "pine.9"}>
+          <Box className="factCell">
+            <Box className="factNumber" c="white">
               {fact.value}
             </Box>
-            <Text
-              fz="sm"
-              lh={1.5}
-              mt={10}
-              c={inverted ? "oat.3" : "dimmed"}
-              style={{ maxWidth: "18ch" }}
-            >
+            <Text fz="sm" lh={1.5} mt={10} c="oat.2" style={{ maxWidth: "18ch" }}>
               {fact.label}
             </Text>
           </Box>

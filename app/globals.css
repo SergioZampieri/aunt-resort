@@ -1,23 +1,33 @@
 /* ===============================================================
    Design system — "lake & deep pine"
-   One motion idiom (fade-up), one shape motif (the arch), one
-   accent (lake teal), gold reserved for dark ground only.
+   A dark, photo-first app: pine-night is the ground everywhere,
+   surfaces are white at 5%, hairlines white at 16%. One motion
+   idiom (fade-up), one shape motif (the arch), one accent (lake
+   teal), lantern gold for eyebrows and the single warm CTA.
    =============================================================== */
 
 :root {
+  /* Helvetica Neue for display, SF Pro for UI — client request. SF Pro only
+     resolves on Apple devices; both fall back to Helvetica/Arial elsewhere,
+     so the two voices collapse into one on Windows/Android. */
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-ui:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+
   /* Editorial type scale. Restrained at the top end: the photography
      is the loud element, not the headings. */
   --display: clamp(2.6rem, 1.9rem + 3.1vw, 4.25rem);
   --h2: clamp(1.85rem, 1.45rem + 1.7vw, 2.7rem);
   --h3: clamp(1.2rem, 1.08rem + 0.6vw, 1.55rem);
 
-  --section-py: clamp(4rem, 2.5rem + 6vw, 8rem);
+  --section-py: clamp(3.5rem, 2rem + 4vw, 5rem);
   --gutter: clamp(1rem, 0.5rem + 2vw, 2rem);
 
+  /* Ink only survives on the condensed (paper) header. */
   --ink: #1b2621;
   --ink-soft: #55635c;
 
-  /* Two light grounds and two dark ones. Nothing else. */
   --paper: #f7f3ea;
   --paper-deep: #ede6d8;
   --pine: #245044;
@@ -30,37 +40,48 @@
 
   --hairline: rgba(27, 38, 33, 0.14);
   --hairline-light: rgba(255, 255, 255, 0.16);
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-raised: rgba(255, 255, 255, 0.09);
 
+  /* Text on dark. */
+  --text-1: #d3e4dc;
+  --text-2: #a9c9bd;
+  --text-3: #7cac9c;
+
+  --tab-bar-h: 88px;
   --ease: cubic-bezier(0.22, 0.68, 0.24, 1);
 }
 
 body {
-  background-color: var(--paper);
-  color: var(--ink);
+  background-color: var(--pine-night);
+  color: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 /* ---------------------------------------------------------------
-   Grounds — flat tonal fields. The only gradients left are the
-   dark band and the scrims over photography, where they do work.
+   Grounds
    --------------------------------------------------------------- */
+.g-night {
+  background-color: var(--pine-night);
+}
+
 .g-paper {
   background-color: var(--paper);
-}
-
-.g-paper-deep {
-  background-color: var(--paper-deep);
-}
-
-.g-card {
-  background-color: #fffdf8;
+  color: var(--ink);
 }
 
 .g-pine {
   background-image:
     radial-gradient(90% 70% at 18% 0%, rgba(42, 156, 147, 0.22) 0%, rgba(42, 156, 147, 0) 62%),
     linear-gradient(168deg, var(--pine) 0%, var(--pine-deep) 55%, var(--pine-night) 100%);
+}
+
+/* A card, input or chip on the dark ground. */
+.surface {
+  background-color: var(--surface);
+  border: 1px solid var(--hairline-light);
+  border-radius: var(--mantine-radius-md);
 }
 
 /* Faint paper grain, dark grounds only — it reads as noise on light. */
@@ -72,6 +93,33 @@ body {
   opacity: 0.2;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------
+   Photo grade — a unifying cool tint over the whole photo library
+   (harsh midday sun on some shots, warm red wood on others). Put the
+   class on the box that holds the image and nothing else: the filter
+   lands on the <img>, the tint layer on the box. Brightness per role
+   via --photo-brightness: .9 behind a headline, .94 on cards, .98 in
+   mosaics.
+   --------------------------------------------------------------- */
+.photo-grade {
+  position: relative;
+}
+
+.photo-grade img {
+  filter: saturate(0.86) contrast(1.03) brightness(var(--photo-brightness, 0.94))
+    hue-rotate(-4deg);
+}
+
+.photo-grade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--lake);
+  opacity: 0.1;
+  mix-blend-mode: color;
 }
 
 /* ---------------------------------------------------------------
@@ -95,12 +143,32 @@ body {
   border-top: 1px solid var(--hairline-light);
 }
 
+/* Display type carries negative tracking; body type none. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  color: var(--paper);
+}
+
 /* ---------------------------------------------------------------
    The arch — the single shape motif, used for feature photography.
    --------------------------------------------------------------- */
 .arch {
   border-radius: 999px 999px 6px 6px / 34% 34% 6px 6px;
   overflow: hidden;
+}
+
+/* ---------------------------------------------------------------
+   Pills — the 56px primary button and its outline sibling.
+   --------------------------------------------------------------- */
+.pill {
+  height: 56px;
+  border-radius: 28px;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
 }
 
 /* ---------------------------------------------------------------
@@ -119,7 +187,9 @@ body {
 
 .hoverCard img,
 .zoomable img {
-  transition: transform 1200ms var(--ease);
+  transition:
+    transform 1200ms var(--ease),
+    filter 1200ms var(--ease);
 }
 
 .hoverCard:hover img,
@@ -139,8 +209,12 @@ body {
 }
 
 /* ---------------------------------------------------------------
-   Photo mosaic — an editorial rhythm instead of a uniform wall.
-   Every 6th tile takes a 2×2 block, so the eye has somewhere to land.
+   Photo mosaics.
+   .mosaic — the open-ended gallery rhythm: every 6th tile takes a
+   2×2 block, so the eye has somewhere to land.
+   .mosaicCurated — the six-tile park sequence (water → play →
+   shade): a 2/1 lead, four squares, a 2/1 close on phones; a 2×2
+   feature, four squares and a 4/1 band from tablet up.
    --------------------------------------------------------------- */
 .mosaic {
   display: grid;
@@ -161,6 +235,26 @@ body {
   grid-row: span 2;
 }
 
+.mosaicCurated {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 9px;
+}
+
+.mosaicCurated > * {
+  aspect-ratio: 1;
+  position: relative;
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+}
+
+.mosaicCurated > *:nth-child(1),
+.mosaicCurated > *:nth-child(6) {
+  grid-column: span 2;
+  aspect-ratio: 2 / 1;
+}
+
 @media (min-width: 48em) {
   .mosaic {
     grid-template-columns: repeat(4, 1fr);
@@ -170,9 +264,29 @@ body {
     grid-column: span 2;
     grid-row: span 2;
   }
+
+  .mosaicCurated {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .mosaicCurated > * {
+    border-radius: 12px;
+  }
+
+  .mosaicCurated > *:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: 1;
+  }
+
+  .mosaicCurated > *:nth-child(6) {
+    grid-column: span 4;
+    aspect-ratio: 4 / 1;
+  }
 }
 
-/* Thumbnail rail inside the lightbox. */
+/* Thumbnail rails: the cabin filmstrip and the one inside the lightbox. */
 .filmstrip {
   display: flex;
   gap: 8px;
@@ -215,6 +329,116 @@ body {
   opacity: 0.85;
 }
 
+/* The cabin page's walk through the unit: 118×84 tiles, radius 8. */
+.walkStrip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  padding-bottom: 4px;
+}
+
+.walkStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.walkTile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 118px;
+  height: 84px;
+  border-radius: 8px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  cursor: zoom-in;
+}
+
+@media (min-width: 48em) {
+  .walkTile {
+    width: 176px;
+    height: 124px;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Day strip — 14 tiles, 54×70, scrolls only itself. Booked days are
+   told apart by lightness and a strike, never by hue alone.
+   --------------------------------------------------------------- */
+.dayStrip {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  padding: 15px 0 4px;
+}
+
+.dayStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.dayTile {
+  flex: 0 0 auto;
+  width: 54px;
+  height: 70px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  scroll-snap-align: start;
+  background: var(--surface);
+  border: 1px solid var(--hairline-light);
+  color: var(--paper);
+  cursor: pointer;
+  transition:
+    background-color 250ms var(--ease),
+    border-color 250ms var(--ease);
+}
+
+.dayTile[data-selected="true"] {
+  background: var(--lake);
+  border-color: var(--lake-bright);
+}
+
+.dayTile[data-booked="true"] {
+  background: rgba(237, 230, 216, 0.14);
+  border-color: rgba(237, 230, 216, 0.22);
+  color: rgba(237, 230, 216, 0.5);
+  cursor: not-allowed;
+}
+
+.dayTile[data-booked="true"] .dayNum {
+  text-decoration: line-through;
+}
+
+.dayDow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.dayTile[data-selected="true"] .dayDow {
+  color: #a0d4d0;
+}
+
+.dayTile[data-booked="true"] .dayDow {
+  color: rgba(237, 230, 216, 0.4);
+}
+
+.dayNum {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------------------------------------------------------------
    Motion — exactly one entrance.
    --------------------------------------------------------------- */
@@ -245,6 +469,29 @@ body {
   animation: driftIn 22s var(--ease) both;
 }
 
+/* Hero carousel dots: 8px, the active one 26px wide and lantern,
+   100px off the bottom so they clear the finder bar overlapping the hero. */
+.heroIndicators {
+  bottom: 100px;
+  gap: 8px;
+}
+
+.heroIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  transition:
+    width 500ms var(--ease),
+    background-color 500ms var(--ease);
+}
+
+.heroIndicator[data-active] {
+  width: 26px;
+  background-color: var(--mantine-color-lantern-3);
+}
+
 /* ---------------------------------------------------------------
    Facts row — quiet figures on a hairline grid.
    --------------------------------------------------------------- */
@@ -258,25 +505,32 @@ body {
 @media (min-width: 62em) {
   .factGrid {
     grid-template-columns: repeat(4, 1fr);
+    column-gap: 32px;
+    row-gap: 40px;
   }
 }
 
 .factCell {
   padding-top: 1rem;
-  border-top: 1px solid var(--hairline);
-}
-
-.factCell[data-inverted="true"] {
-  border-top-color: var(--hairline-light);
+  border-top: 1px solid var(--hairline-light);
 }
 
 .factNumber {
-  font-family: var(--font-abhaya-libre), serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(2.1rem, 1.6rem + 1.5vw, 2.9rem);
   line-height: 1;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.025em;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------
+   Mobile tab bar clearance — page content ends above the fixed bar.
+   --------------------------------------------------------------- */
+@media (max-width: 47.9375em) {
+  .mobile-tab-bar-clearance {
+    padding-bottom: calc(var(--tab-bar-h) + 12px);
+  }
 }
 
 /* ---------------------------------------------------------------
@@ -301,7 +555,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hoverCard,
   .hoverCard img,
-  .zoomable img {
+  .zoomable img,
+  .heroIndicator,
+  .dayTile {
     transition: none;
     transform: none;
   }

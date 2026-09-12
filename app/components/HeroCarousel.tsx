@@ -4,12 +4,9 @@ import Image from "next/image";
 import { Carousel, CarouselSlide } from "@mantine/carousel";
 import type { EmblaCarouselType } from "embla-carousel";
 import { useEffect, useRef, useState } from "react";
-import { Box, Container, Group, Stack, Text, Title } from "@mantine/core";
+import { Box, Container, Stack, Text, Title } from "@mantine/core";
 import { useReducedMotion } from "@mantine/hooks";
-import { IconArrowDown, IconMapPin } from "@tabler/icons-react";
 import type { HeroBanner } from "../data/site";
-import { LinkButton } from "./NavLinks";
-import { WhatsAppButton } from "./WhatsAppButton";
 
 type HeroCarouselProps = {
   banners: HeroBanner[];
@@ -17,6 +14,11 @@ type HeroCarouselProps = {
 
 const AUTOPLAY_MS = 7000;
 
+/**
+ * The desktop hero: five frames, 7s autoplay, ken-burns on the showing frame.
+ * No buttons — the finder bar overlapping its bottom edge is the call to
+ * action, so the copy stops 116px short of it and the dots sit 100px up.
+ */
 export function HeroCarousel({ banners }: HeroCarouselProps) {
   const emblaRef = useRef<EmblaCarouselType | null>(null);
   const [paused, setPaused] = useState(false);
@@ -39,7 +41,6 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
 
   return (
     <Box
-      className="grain"
       style={{ position: "relative", backgroundColor: "var(--pine-night)" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -49,8 +50,9 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
       <Carousel
         withIndicators
         withControls={false}
-        height="clamp(540px, 86vh, 820px)"
+        height="clamp(560px, 82vh, 660px)"
         emblaOptions={{ loop: true, duration: 45 }}
+        classNames={{ indicators: "heroIndicators", indicator: "heroIndicator" }}
         getEmblaApi={(embla) => {
           emblaRef.current = embla;
           embla.on("select", () => setActive(embla.selectedScrollSnap()));
@@ -60,8 +62,13 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
           <CarouselSlide key={banner.src}>
             <Box
               // The slow zoom restarts on whichever slide is showing.
-              className={index === active ? "kenburns" : undefined}
-              style={{ position: "relative", height: "100%", overflow: "hidden" }}
+              className={index === active ? "kenburns photo-grade" : "photo-grade"}
+              style={{
+                position: "relative",
+                height: "100%",
+                overflow: "hidden",
+                ["--photo-brightness" as string]: 0.92,
+              }}
             >
               <Image
                 src={banner.src}
@@ -88,50 +95,28 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
           pointerEvents: "none",
         }}
       >
-        <Container size="lg" w="100%" pb={{ base: 72, sm: 96 }}>
-          <Stack gap="lg" maw={760} style={{ pointerEvents: "auto" }}>
-            <Group gap={8} c="lantern.3">
-              <IconMapPin size={16} />
-              <Text className="eyebrow">Tandil · Buenos Aires</Text>
-            </Group>
+        <Container size="lg" w="100%" pb={116}>
+          <Stack gap={0} maw={790} style={{ pointerEvents: "auto" }}>
+            <Text className="eyebrow" c="lantern.2" pb={20}>
+              Tandil · Buenos Aires
+            </Text>
 
-            <Title order={1} c="white" style={{ textWrap: "balance" }}>
+            <Title
+              order={1}
+              c="white"
+              fz="clamp(3.4rem, 1.5rem + 4.9vw, 5.375rem)"
+              lh={0.95}
+              style={{ textWrap: "balance", letterSpacing: "-0.042em" }}
+            >
               El aire de la sierra, a tu ritmo.
             </Title>
 
-            <Text c="oat.2" fz={{ base: "md", sm: "lg" }} lh={1.7} maw={500}>
+            <Text c="oat.1" fz={17} lh={1.7} maw={520} pt={22}>
               Seis cabañas de piedra y madera entre el parque y la piscina, a minutos del
               centro. Sin apuro, sin ruido.
             </Text>
-
-            <Group gap="sm" mt="sm">
-              <LinkButton
-                href="/cabanas"
-                size="md"
-                radius="xl"
-                color="lake"
-              >
-                Ver fechas libres
-              </LinkButton>
-              <WhatsAppButton variant="white" label="Escribinos" />
-            </Group>
           </Stack>
         </Container>
-      </Box>
-
-      {/* Scroll cue */}
-      <Box
-        aria-hidden
-        style={{
-          position: "absolute",
-          left: "50%",
-          bottom: 22,
-          transform: "translateX(-50%)",
-          color: "rgba(255,255,255,0.65)",
-          pointerEvents: "none",
-        }}
-      >
-        <IconArrowDown size={20} />
       </Box>
     </Box>
   );

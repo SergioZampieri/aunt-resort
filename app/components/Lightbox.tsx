@@ -128,7 +128,7 @@ export function Lightbox({ images, label, index, onClose }: LightboxProps) {
             >
               {images.map((src, i) => (
                 <CarouselSlide key={src}>
-                  <Box style={{ position: "relative", height: "100%" }}>
+                  <Box className="photo-grade" style={{ position: "relative", height: "100%" }}>
                     <Image
                       src={src}
                       alt={`${label} (foto ${i + 1} de ${images.length})`}
@@ -149,7 +149,7 @@ export function Lightbox({ images, label, index, onClose }: LightboxProps) {
           {images.map((src, i) => (
             <UnstyledButton
               key={src}
-              className="filmstripItem"
+              className="filmstripItem photo-grade"
               data-active={i === current || undefined}
               onClick={() => embla?.scrollTo(i)}
               aria-label={`Ir a la foto ${i + 1}`}

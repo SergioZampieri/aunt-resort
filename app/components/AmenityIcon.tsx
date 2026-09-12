@@ -16,7 +16,7 @@ const icons = {
 
 export type AmenityIconName = keyof typeof icons;
 
-export function AmenityIcon({ name, inverted }: { name: string; inverted?: boolean }) {
+export function AmenityIcon({ name }: { name: string }) {
   const Icon = icons[name as AmenityIconName] ?? IconSparkles;
 
   return (
@@ -25,11 +25,11 @@ export function AmenityIcon({ name, inverted }: { name: string; inverted?: boole
         width: 60,
         height: 60,
         borderRadius: "50%",
-        border: `1px solid ${inverted ? "var(--hairline-light)" : "var(--hairline)"}`,
+        border: "1px solid var(--hairline-light)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        color: inverted ? "var(--mantine-color-lantern-4)" : "var(--mantine-color-lake-8)",
+        color: "var(--mantine-color-lantern-4)",
       }}
     >
       <Icon size={24} stroke={1.4} />

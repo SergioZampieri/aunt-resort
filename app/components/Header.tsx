@@ -3,17 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Box,
-  Burger,
-  Container,
-  Divider,
-  Drawer,
-  Group,
-  Stack,
-  Anchor,
-} from "@mantine/core";
-import { useDisclosure, useWindowScroll } from "@mantine/hooks";
+import { Box, Container, Group, Anchor } from "@mantine/core";
+import { useWindowScroll } from "@mantine/hooks";
 import { siteInfo } from "../data/site";
 import { WhatsAppButton } from "./WhatsAppButton";
 
@@ -36,8 +27,12 @@ function isActive(pathname: string, href: string): boolean {
   return pathname.startsWith(href);
 }
 
+/**
+ * Desktop and tablet only: phones navigate with `MobileTabBar` and carry the
+ * logo mark inside the opening hero instead. Transparent over the hero, it
+ * condenses to the paper bar with dark ink once the page scrolls.
+ */
 export function Header() {
-  const [opened, { toggle, close }] = useDisclosure(false);
   const pathname = usePathname() ?? "/";
   const [scroll] = useWindowScroll();
   const condensed = scroll.y > 24;
@@ -45,6 +40,7 @@ export function Header() {
   return (
     <Box
       component="header"
+      visibleFrom="sm"
       style={{
         position: "fixed",
         top: 0,
@@ -81,11 +77,10 @@ export function Header() {
                   transition: "height 300ms ease",
                 }}
               />
-
             </Group>
           </Anchor>
 
-          <Group gap="md" visibleFrom="sm" wrap="nowrap">
+          <Group gap={22} wrap="nowrap">
             {navLinks.map((link) => {
               const active = isActive(pathname, link.href);
               return (
@@ -94,8 +89,8 @@ export function Header() {
                   component={Link}
                   href={link.href}
                   underline="never"
-                  c={condensed ? (active ? "pine.8" : "black") : "white"}
-                  fz="sm"
+                  c={condensed ? "var(--ink)" : "white"}
+                  fz={14}
                   fw={active ? 700 : 500}
                   aria-current={active ? "page" : undefined}
                   style={{
@@ -117,50 +112,8 @@ export function Header() {
           <Box visibleFrom="lg">
             <WhatsAppButton label="Reservar" size="sm" />
           </Box>
-
-          <Burger
-            opened={opened}
-            onClick={toggle}
-            hiddenFrom="sm"
-            color={condensed ? "var(--ink)" : "#fff"}
-            aria-label="Abrir menú"
-          />
         </Group>
       </Container>
-
-      <Drawer
-        opened={opened}
-        onClose={close}
-        title={siteInfo.name}
-        hiddenFrom="sm"
-        padding="lg"
-        size="xs"
-        styles={{ content: { backgroundColor: "var(--paper)" } }}
-      >
-        <Stack gap="md">
-          {navLinks.map((link) => {
-            const active = isActive(pathname, link.href);
-            return (
-              <Anchor
-                key={link.href}
-                component={Link}
-                href={link.href}
-                underline="never"
-                c={active ? "pine.8" : "black"}
-                fz="lg"
-                ff="var(--font-abhaya-libre)"
-                fw={active ? 700 : 500}
-                aria-current={active ? "page" : undefined}
-                onClick={close}
-              >
-                {link.label}
-              </Anchor>
-            );
-          })}
-          <Divider my="xs" />
-          <WhatsAppButton label="Reservar" fullWidth />
-        </Stack>
-      </Drawer>
     </Box>
   );
 }

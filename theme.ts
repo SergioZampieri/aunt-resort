@@ -79,10 +79,29 @@ const lantern: MantineColorsTuple = [
   "#9c6900",
 ];
 
+/**
+ * Mantine's dark scheme reads its greys from `dark`. Pitching those in pine
+ * makes every input, popover, modal and calendar land on the app ground
+ * (`dark.7` = pine-night) with paper text (`dark.0`) and no per-component
+ * overrides: 6 is the surface (white at 5% on night), 4 the hairline.
+ */
+const dark: MantineColorsTuple = [
+  "#f7f3ea",
+  "#d3e4dc",
+  "#a9c9bd",
+  "#7cac9c",
+  "#33433f",
+  "#245044",
+  "#182a26",
+  "#0c1f1a",
+  "#0a1a16",
+  "#071310",
+];
+
 export const theme = createTheme({
-  fontFamily: "var(--font-open-sans), sans-serif",
+  fontFamily: "var(--font-ui)",
   headings: {
-    fontFamily: "var(--font-abhaya-libre), serif",
+    fontFamily: "var(--font-display)",
     fontWeight: "700",
     sizes: {
       h1: { fontSize: "var(--display)", lineHeight: "1.06" },
@@ -98,7 +117,9 @@ export const theme = createTheme({
     moss,
     oat,
     lantern,
+    dark,
   },
+  white: "#f7f3ea",
   black: "#1b2621",
   defaultRadius: "md",
   radius: {

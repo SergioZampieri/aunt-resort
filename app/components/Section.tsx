@@ -6,17 +6,9 @@ type SectionHeadingProps = {
   title: React.ReactNode;
   lead?: string;
   align?: "center" | "left";
-  /** Light text for placement on the dark pine band. */
-  inverted?: boolean;
 };
 
-export function SectionHeading({
-  eyebrow,
-  title,
-  lead,
-  align = "left",
-  inverted,
-}: SectionHeadingProps) {
+export function SectionHeading({ eyebrow, title, lead, align = "left" }: SectionHeadingProps) {
   return (
     <Reveal>
       <Stack
@@ -28,18 +20,18 @@ export function SectionHeading({
       >
         {eyebrow ? (
           <Text
-            className={inverted ? "eyebrow ruled-light" : "eyebrow ruled"}
-            c={inverted ? "lantern.4" : "lake.8"}
+            className={align === "center" ? "eyebrow" : "eyebrow ruled-light"}
+            c="pine.3"
             w={align === "center" ? undefined : "100%"}
           >
             {eyebrow}
           </Text>
         ) : null}
-        <Title order={2} c={inverted ? "white" : undefined} style={{ textWrap: "balance" }}>
+        <Title order={2} c="white" style={{ textWrap: "balance", letterSpacing: "-0.035em" }}>
           {title}
         </Title>
         {lead ? (
-          <Text fz="lg" lh={1.75} c={inverted ? "oat.3" : "dimmed"}>
+          <Text fz="md" lh={1.7} c="pine.1">
             {lead}
           </Text>
         ) : null}
@@ -50,17 +42,17 @@ export function SectionHeading({
 
 type SectionProps = {
   children: React.ReactNode;
-  tone?: "paper" | "deep" | "pine";
+  tone?: "night" | "pine";
   id?: string;
 };
 
 const tones = {
-  paper: "g-paper",
-  deep: "g-paper-deep",
+  night: "g-night",
   pine: "g-pine grain",
 } as const;
 
-export function Section({ children, tone = "paper", id }: SectionProps) {
+/** A band on the app ground with the shared gutter (`Container size="lg"`). */
+export function Section({ children, tone = "night", id }: SectionProps) {
   return (
     <Box
       component="section"

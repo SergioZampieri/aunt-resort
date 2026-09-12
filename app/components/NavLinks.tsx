@@ -1,7 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { Anchor, Box, Button, type AnchorProps, type BoxProps, type ButtonProps } from "@mantine/core";
+import {
+  ActionIcon,
+  Anchor,
+  Box,
+  Button,
+  type ActionIconProps,
+  type AnchorProps,
+  type BoxProps,
+  type ButtonProps,
+} from "@mantine/core";
 
 /**
  * Mantine components can't take `component={Link}` from a server component —
@@ -50,5 +59,20 @@ export function LinkBox({ href, children, ...props }: LinkBoxProps) {
     >
       {children}
     </Box>
+  );
+}
+
+type LinkActionIconProps = ActionIconProps & {
+  href: string;
+  "aria-label": string;
+  children: React.ReactNode;
+};
+
+/** An icon-only link (the round "back" button on a cabin page). */
+export function LinkActionIcon({ href, children, ...props }: LinkActionIconProps) {
+  return (
+    <ActionIcon component={Link} href={href} {...props}>
+      {children}
+    </ActionIcon>
   );
 }

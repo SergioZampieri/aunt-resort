@@ -15,7 +15,7 @@ export function Footer() {
   return (
     <Box
       component="footer"
-      className="grain"
+      className="grain mobile-tab-bar-clearance"
       style={{
         position: "relative",
         paddingBlock: "clamp(3rem, 2rem + 3vw, 4.5rem)",
@@ -26,7 +26,7 @@ export function Footer() {
       <Container size="lg" style={{ position: "relative", zIndex: 1 }}>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="xl">
           <Stack gap="xs">
-            <Title order={2} c="white" fz={26} ff="var(--font-abhaya-libre)" lh={1.1}>
+            <Title order={2} c="white" fz={26} ff="var(--font-display)" lh={1.1}>
               {siteInfo.name}
             </Title>
             <Text className="eyebrow" c="lantern.3">
@@ -86,6 +86,9 @@ export function Footer() {
             </Text>
             <Text c="oat.2" fz="sm">
               Check-out: {siteInfo.checkOut}
+            </Text>
+            <Text c="oat.2" fz="sm">
+              No se admiten mascotas
             </Text>
             <LinkAnchor href="/cabanas" c="oat.2" fz="sm" underline="hover">
               Ver fechas libres

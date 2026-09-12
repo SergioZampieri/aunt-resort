@@ -5,13 +5,15 @@ import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { whatsappHref } from "../lib/whatsapp";
 
 /**
- * Always-reachable enquiry button. Anchored bottom-right so the CTA survives
- * scrolling on every page, which the in-page buttons alone did not.
+ * Always-reachable enquiry button for tablet widths, where the header's
+ * "Reservar" pill is hidden. Phones have the tab bar and in-page pills
+ * instead; desktops have the header button.
  */
 export function WhatsAppFab() {
   return (
     <Tooltip label="Consultar por WhatsApp" position="left" withArrow>
       <ActionIcon
+        visibleFrom="sm"
         hiddenFrom="lg"
         component="a"
         href={whatsappHref()}

@@ -1,143 +1,132 @@
-import {
-  Container,
-  Divider,
-  Grid,
-  GridCol,
-  Group,
-  Paper,
-  Stack,
-  Title,
-  Text,
-  List,
-  ListItem,
-  ThemeIcon,
-  Badge,
-} from "@mantine/core";
-import { IconArrowLeft, IconCheck, IconClock, IconUsers } from "@tabler/icons-react";
-import { type Cabin, getCabinImages } from "../data/cabins";
-import { siteInfo } from "../data/site";
-import { bookingMessage } from "../lib/whatsapp";
-import { LinkAnchor } from "./NavLinks";
-import { PageHeader } from "./PageHeader";
-import { CabinGallery } from "./CabinGallery";
+import Image from "next/image";
+import { Suspense } from "react";
+import { Box, Container, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
+import { IconChevronLeft } from "@tabler/icons-react";
+import { type Cabin, getFilmstripImages } from "../data/cabins";
+import { LinkActionIcon, LinkAnchor } from "./NavLinks";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
-import { WhatsAppButton } from "./WhatsAppButton";
+import { StayPlanner } from "./StayPlanner";
+import { WalkStrip } from "./WalkStrip";
 
 type CabinPageProps = {
   cabin: Cabin;
 };
 
+/**
+ * One unit: the hero, the walk through it, what it has, and the dates —
+ * ending in "Reservar estas fechas". The month calendar stays for desktop,
+ * where there is room to browse further ahead.
+ */
 export function CabinPage({ cabin }: CabinPageProps) {
-  const images = getCabinImages(cabin);
+  const images = getFilmstripImages(cabin);
 
   return (
-    <>
-      <PageHeader
-        title={cabin.name}
-        image={cabin.sectionImage}
-        imageAlt={`Vista exterior de la ${cabin.name}`}
-        subtitle={cabin.shortDescription}
-      />
-      <Container size="lg" py={{ base: 36, sm: 64 }}>
-        <LinkAnchor
-          href="/cabanas"
-          c="lake.8"
-          fz="sm"
-          fw={500}
-          underline="hover"
-          mb="lg"
-          display="inline-block"
+    <Box className="g-night" pb={{ base: 84, sm: "var(--section-py)" }}>
+      <Box style={{ position: "relative", height: "clamp(384px, 50vw, 520px)", overflow: "hidden" }}>
+        <Box
+          className="photo-grade"
+          style={{ position: "absolute", inset: 0, ["--photo-brightness" as string]: 0.97 }}
         >
-          <Group gap={6} wrap="nowrap">
-            <IconArrowLeft size={15} />
-            Volver a todas las cabañas
-          </Group>
-        </LinkAnchor>
+          <Image
+            src={cabin.sectionImage}
+            alt={`Vista de la ${cabin.name.toLowerCase()}`}
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: "cover" }}
+          />
+        </Box>
+        <Box
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, #0c1f1a 1%, rgba(12,31,26,0.3) 48%, rgba(12,31,26,0.3) 100%)",
+          }}
+        />
+        <LinkActionIcon
+          hiddenFrom="sm"
+          href="/"
+          aria-label="Volver a los resultados"
+          size={46}
+          radius="xl"
+          variant="filled"
+          color="rgba(12,31,26,0.55)"
+          style={{
+            position: "absolute",
+            top: 56,
+            left: 16,
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            color: "var(--paper)",
+          }}
+        >
+          <IconChevronLeft size={24} stroke={1.5} />
+        </LinkActionIcon>
+        <Container size="lg" style={{ position: "absolute", inset: "auto 0 0 0", zIndex: 1 }} pb={{ base: 20, sm: 40 }}>
+          <Text className="eyebrow" c="lantern.4" pb={10}>
+            {cabin.capacity}
+          </Text>
+          <Title order={1} className="display" fz={{ base: 44, sm: "var(--display)" }} lh={0.98}>
+            {cabin.name}
+          </Title>
+        </Container>
+      </Box>
 
-        <Grid gap={{ base: "lg", md: 40 }}>
+      <Container size="lg" pt={14}>
+        <WalkStrip images={images} label={`${cabin.name} — Mirador de Animas`} />
+
+        <Grid gap={{ base: 0, md: 64 }} pt={{ base: 22, md: 40 }}>
           <GridCol span={{ base: 12, md: 7 }}>
-            <CabinGallery images={images} alt={`${cabin.name} — Mirador de Animas`} />
+            <Stack gap={0}>
+              <Group visibleFrom="sm" pb={16}>
+                <LinkAnchor href="/" c="lake.4" fz={13} fw={600} underline="never">
+                  ‹ Cambiar fechas
+                </LinkAnchor>
+              </Group>
+              <Text fz={15} lh={1.7} c="pine.1" style={{ textWrap: "pretty" }}>
+                {cabin.shortDescription}
+              </Text>
+              <Text fz={13} lh={1.65} c="pine.2" pt={11}>
+                {cabin.parkNote}
+              </Text>
+              <Group gap={7} pt={20}>
+                {cabin.amenities.map((amenity) => (
+                  <Text
+                    key={amenity}
+                    fz={12.5}
+                    fw={500}
+                    lh={1}
+                    c="pine.1"
+                    px={13}
+                    py={9}
+                    style={{
+                      borderRadius: "var(--mantine-radius-sm)",
+                      backgroundColor: "rgba(255,255,255,0.06)",
+                      border: "1px solid var(--hairline-light)",
+                    }}
+                  >
+                    {amenity}
+                  </Text>
+                ))}
+              </Group>
+            </Stack>
           </GridCol>
 
           <GridCol span={{ base: 12, md: 5 }}>
-            <Paper
-              p="xl"
-              radius="md"
-              shadow="sm"
-              className="g-card"
-              style={{
-                position: "sticky",
-                top: 96,
-                border: "1px solid var(--hairline)",
-              }}
-            >
-              <Stack gap="md">
-                <Group gap="xs">
-                  <Badge
-                    color="moss"
-                    variant="light"
-                    size="lg"
-                    leftSection={<IconUsers size={14} />}
-                  >
-                    {cabin.capacity}
-                  </Badge>
-                  <Badge
-                    color="oat"
-                    variant="light"
-                    size="lg"
-                    leftSection={<IconClock size={14} />}
-                  >
-                    Check-in {siteInfo.checkIn}
-                  </Badge>
-                </Group>
-
-                <Text>{cabin.shortDescription}</Text>
-
-                <WhatsAppButton
-                  message={bookingMessage({ cabinName: cabin.name })}
-                  label="Consultar esta cabaña"
-                  size="md"
-                  fullWidth
-                />
-
-                <Divider my={4} />
-
-                <Title order={3} ff="var(--font-abhaya-libre)" fz="xl">
-                  Comodidades
-                </Title>
-                <List
-                  spacing="xs"
-                  fz="sm"
-                  icon={
-                    <ThemeIcon color="lake" variant="light" size={22} radius="xl">
-                      <IconCheck size={13} stroke={2.2} />
-                    </ThemeIcon>
-                  }
-                >
-                  {cabin.amenities.map((amenity) => (
-                    <ListItem key={amenity}>{amenity}</ListItem>
-                  ))}
-                </List>
-              </Stack>
-            </Paper>
+            <Suspense fallback={null}>
+              <StayPlanner cabin={cabin} />
+            </Suspense>
           </GridCol>
         </Grid>
 
-        <Stack gap="sm" mt={{ base: 48, sm: 72 }}>
-          <Title order={2} ff="var(--font-abhaya-libre)">
-            Disponibilidad
-          </Title>
-          <Text c="dimmed" fz="sm" maw={620}>
-            Fechas libres y ocupadas para {cabin.name}. Para reservar, escribinos por WhatsApp.
-            ¿Querés comparar las seis cabañas de una vez?{" "}
-            <LinkAnchor href="/cabanas" c="pine.8">
-              Buscá por fechas acá
-            </LinkAnchor>
-            .
+        <Box visibleFrom="md" className="ruled-light" mt={56}>
+          <Text className="eyebrow" c="pine.3" pb={18}>
+            Disponibilidad por mes
           </Text>
           <AvailabilityCalendar cabinId={cabin.id} cabinName={cabin.name} />
-        </Stack>
+        </Box>
       </Container>
-    </>
+    </Box>
   );
 }

@@ -3,7 +3,6 @@ import "@mantine/dates/styles.css";
 import "@mantine/carousel/styles.css";
 import "./globals.css";
 import React from "react";
-import { Abhaya_Libre, Open_Sans } from "next/font/google";
 import {
   MantineProvider,
   ColorSchemeScript,
@@ -16,19 +15,7 @@ import { siteInfo } from "./data/site";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { WhatsAppFab } from "./components/WhatsAppFab";
-
-const abhayaLibre = Abhaya_Libre({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-abhaya-libre",
-  display: "swap",
-});
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  variable: "--font-open-sans",
-  display: "swap",
-});
+import { MobileTabBar } from "./components/MobileTabBar";
 
 export const metadata = {
   metadataBase: new URL(siteInfo.url),
@@ -101,13 +88,9 @@ const lodgingJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="es"
-      {...mantineHtmlProps}
-      className={`${abhayaLibre.variable} ${openSans.variable}`}
-    >
+    <html lang="es" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript defaultColorScheme="light" />
+        <ColorSchemeScript forceColorScheme="dark" />
         <link rel="shortcut icon" href="/favicon.svg" />
         <script
           type="application/ld+json"
@@ -116,7 +99,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme="light">
+        <MantineProvider theme={theme} forceColorScheme="dark">
           <DatesProvider settings={{ locale: "es", firstDayOfWeek: 1, weekendDays: [0, 6] }}>
             <a href="#contenido" className="skip-link">
               Saltar al contenido
@@ -125,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main id="contenido">{children}</main>
             <Footer />
             <WhatsAppFab />
+            <MobileTabBar />
           </DatesProvider>
         </MantineProvider>
       </body>
