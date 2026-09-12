@@ -91,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript forceColorScheme="dark" />
-        <link rel="shortcut icon" href="/favicon.svg" />
+        <link rel="shortcut icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/favicon.svg`} />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
